@@ -1,7 +1,10 @@
-import Image from "next/image";
+import {Texteditor} from "@/components/Texteditor";
 
 export default function Home() {
     return (
-        <div><h1>home101</h1></div>
+        <div className="w-screen h-screen flex flex-col items-center bg-white">
+            <h1>home101</h1>
+            <Texteditor/>
+        </div>
     );
 }
