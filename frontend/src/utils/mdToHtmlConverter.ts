@@ -33,7 +33,6 @@ const replaceLists = (text: string) => {
     });
 };
 
-
 const replaceLine = (text:string) =>{
    return text.replace(/^---$/gm, "<hr>")
 }
