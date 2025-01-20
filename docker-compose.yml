@@ -1,0 +1,54 @@
+services:
+  backend:
+    build: backend
+    ports:
+      - "8080:8080"
+  frontend:
+    build: frontend
+    ports:
+      - "3000:3000"
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.0
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://keycloak_db:5432/keycloak
+      - KC_DB_USERNAME=admin
+      - KC_DB_PASSWORD=admin
+      - KC_HOSTNAME=localhost
+      - KC_HEALTH_ENABLED=true
+      - KC_METRICS_ENABLED=true
+    ports:
+      - "9090:8080"
+    command: [ "start-dev" ]
+    depends_on:
+        - keycloak_db
+
+  keycloak_db:
+    image: postgres:15
+    container_name: keycloak_db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+
+  backend_db:
+    image: postgres:15
+    container_name: backend_db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - backend_db_data:/var/lib/postgresql/data
+
+volumes:
+  keycloak_db_data:
+  backend_db_data:
