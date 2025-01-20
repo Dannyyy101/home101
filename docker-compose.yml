@@ -13,7 +13,7 @@ services:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://keycloak_db:5432/keycloak
+      - KC_DB_URL=jdbc:postgresql://db:5432/keycloak
       - KC_DB_USERNAME=admin
       - KC_DB_PASSWORD=admin
       - KC_HOSTNAME=localhost
@@ -23,9 +23,9 @@ services:
       - "9090:8080"
     command: [ "start-dev" ]
     depends_on:
-        - keycloak_db
+        - db
 
-  keycloak_db:
+  db:
     image: postgres:15
     container_name: keycloak_db
     environment:
@@ -33,22 +33,12 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     ports:
-      - "5433:5432"
-    volumes:
-      - keycloak_db_data:/var/lib/postgresql/data
-
-  backend_db:
-    image: postgres:15
-    container_name: backend_db
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-    ports:
       - "5432:5432"
     volumes:
-      - backend_db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+      - ./scripts/init-scripts:/docker-entrypoint-initdb.d
+
+
 
 volumes:
-  keycloak_db_data:
-  backend_db_data:
+  db_data:
