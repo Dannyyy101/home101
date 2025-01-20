@@ -1,15 +1,13 @@
 services:
   backend:
     build: backend
-    ports:
-      - "8080:8080"
+
   frontend:
     build: frontend
-    ports:
-      - "3000:3000"
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.0
     environment:
+      - KC_HTTP_RELATIVE_PATH=/auth
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_DB=postgres
@@ -19,8 +17,6 @@ services:
       - KC_HOSTNAME=localhost
       - KC_HEALTH_ENABLED=true
       - KC_METRICS_ENABLED=true
-    ports:
-      - "9090:8080"
     command: [ "start-dev" ]
     depends_on:
         - db
@@ -38,7 +34,14 @@ services:
       - db_data:/var/lib/postgresql/data
       - ./scripts/init-scripts:/docker-entrypoint-initdb.d
 
-
+  nginx:
+    image: nginx:latest
+    container_name: nginx_reverse_proxy
+    ports:
+      - "80:80" # Mappt den Port 80 des Hosts auf den Port 80 des Containers
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mountet die Konfigurationsdatei ins NGINX-Verzeichnis
+    restart: always
 
 volumes:
   db_data:
