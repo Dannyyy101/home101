@@ -1,7 +1,7 @@
 import Keycloak from "keycloak-js";
 
 export const keycloak = new Keycloak({
-    url: "https://87.106.207.129/auth",
-    realm: "101",
-    clientId: "home"
+    url:  process.env.NEXT_PUBLIC_KEYCLOAK_URL || "",
+    realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM || "",
+    clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID || "",
 });
