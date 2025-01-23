@@ -1,26 +1,41 @@
+
 services:
   backend:
     build: backend
+    networks:
+      - net
 
   frontend:
     build: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - net
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.0
     environment:
+      - KC_PROXY=edge
+      - KC_HOSTNAME=87.106.207.129
       - KC_HTTP_RELATIVE_PATH=/auth
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_DB=postgres
-      - KC_HOSTNAME=http://87.106.207.129
+      - KC_HOSTNAME=https://87.106.207.129/auth
       - KC_DB_URL=jdbc:postgresql://db:5432/keycloak
       - KC_DB_USERNAME=admin
       - KC_DB_PASSWORD=admin
-      - KC_HEALTH_ENABLED=true
-      - KC_METRICS_ENABLED=true
-    command: [ "start-dev" ]
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTP_ENABLED=true
+      - KC_HTTP_PORT=8080
+      - KC_HTTPS_ENABLED=false
+      - KC_PROXY_ADDRESS_FORWARDING=true
+    command: ["start-dev"]
     depends_on:
         - db
-
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    networks:
+      - net
   db:
     image: postgres:15
     container_name: keycloak_db
@@ -33,20 +48,25 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./scripts/init-scripts:/docker-entrypoint-initdb.d
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx_reverse_proxy
+    networks:
+      - net
+  proxy:
+    image: nginx:alpine
     ports:
-      - "80:80" # Mappt den Port 80 des Hosts auf den Port 80 des Containers
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mountet die Konfigurationsdatei ins NGINX-Verzeichnis
-    restart: always
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/certs
     depends_on:
       - db
       - backend
       - frontend
       - keycloak
-
+    networks:
+      - net
 volumes:
   db_data:
+
+networks:
+  net:
