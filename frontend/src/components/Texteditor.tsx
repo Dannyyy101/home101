@@ -33,9 +33,9 @@ export const Texteditor = () => {
             }
 
             setShowToolTipps({shown: true, position: {x: mouseX, y: mouseY}})
-        }else{
+        } else {
             console.log("dawad")
-            setShowToolTipps({shown: true, position: {x: -1, y: -1}})
+            setShowToolTipps({shown: false, position: {x: -1, y: -1}})
         }
     };
 
@@ -57,6 +57,10 @@ export const Texteditor = () => {
         };
     }, []);
 
+    const handleSaveDocument = () => {
+
+    }
+
     return (
         <section className="w-full h-full relative p-8 mt-2">
             {showToolTipps.shown &&
@@ -76,11 +80,18 @@ export const Texteditor = () => {
                     dangerouslySetInnerHTML={{__html: htmlContent}}>
                 </div>
             }
+            <button onClick={() => handleSaveDocument()}>
+                 <span className="material-icons absolute top-0 right-10 text-black">
+                    save
+                 </span>
+            </button>
             <button onClick={() => setShowMd(!showMd)}>
-                <span className="material-icons absolute top-0 right-4 text-black">
+                <span className="material-icons absolute top-0 right-[70px] text-black">
                     {showMd ? "edit" : "menu_book"}
                 </span>
             </button>
+
+
         </section>
     )
 }
