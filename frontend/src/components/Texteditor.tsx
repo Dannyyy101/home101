@@ -2,8 +2,10 @@
 
 import {useEffect, useRef, useState} from "react";
 import {mdToHtmlConverter} from "@/utils/mdToHtmlConverter";
+import {Document} from "@/types/document";
 
-export const Texteditor = () => {
+export const Texteditor = ({doc}: { doc: Document }) => {
+
     const [htmlContent, setHtmlContent] = useState<string>("")
     const [mdContent, setMdContent] = useState<string>("")
     const [showMd, setShowMd] = useState<boolean>(true)
@@ -11,6 +13,10 @@ export const Texteditor = () => {
         shown: boolean,
         position: { x: number, y: number }
     }>({shown: false, position: {x: -1, y: -1}})
+
+    useEffect(() => {
+        setMdContent(doc.content)
+    }, []);
 
     const toolTippsRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +39,7 @@ export const Texteditor = () => {
             }
 
             setShowToolTipps({shown: true, position: {x: mouseX, y: mouseY}})
-        }else{
+        } else {
             console.log("dawad")
             setShowToolTipps({shown: true, position: {x: -1, y: -1}})
         }
