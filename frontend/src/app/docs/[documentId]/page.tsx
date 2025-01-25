@@ -13,15 +13,18 @@ export default function Page() {
 
     useEffect(() => {
         const token = Cookies.get("accessToken");
+
         if (token) {
+            console.log(token);
+            console.log(params)
             getDocumentById(token, params.documentId).then((doc: Document) => {
                 setDocument(doc);
             })
         }
-    }, []);
+    }, [params]);
 
     return (
-        <main className="w-screen">
+        <main className="w-screen flex flex-col">
             {document &&
                 <Texteditor doc={document}/>
             }

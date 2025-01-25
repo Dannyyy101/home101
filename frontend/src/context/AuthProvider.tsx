@@ -28,7 +28,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
                 if (authenticated) {
                     setUserName(keycloak.tokenParsed?.preferred_username || "");
                     setUserId(keycloak.tokenParsed?.sub || "");
-                    console.log(keycloak.token)
+                    Cookies.set("accessToken", keycloak.token || "");
+                    Cookies.set("refreshToken", "")
                 } else {
                     await keycloak.login();
                 }

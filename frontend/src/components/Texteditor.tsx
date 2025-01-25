@@ -3,6 +3,8 @@
 import {useEffect, useRef, useState} from "react";
 import {mdToHtmlConverter} from "@/utils/mdToHtmlConverter";
 import {Document} from "@/types/document";
+import {updateDocumentById} from "@/services/documentService";
+import Cookies from "js-cookie";
 
 export const Texteditor = ({doc}: { doc: Document }) => {
 
@@ -63,8 +65,11 @@ export const Texteditor = ({doc}: { doc: Document }) => {
         };
     }, []);
 
-    const handleSaveDocument = () => {
-
+    const handleSaveDocument = async () => {
+        const token = Cookies.get("accessToken");
+        if (token) {
+            await updateDocumentById(token, String(doc.id), {...doc, content: mdContent})
+        }
     }
 
     return (
