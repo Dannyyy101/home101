@@ -24,7 +24,7 @@ export default function Page() {
     }, [params]);
 
     return (
-        <main className="w-screen flex flex-col">
+        <main className="w-screen flex flex-col h-[90%]">
             {document &&
                 <Texteditor doc={document}/>
             }
