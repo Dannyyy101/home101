@@ -1,6 +1,6 @@
 'use client'
 
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useParams, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {getDocumentById} from "@/services/documentService";
 import Cookies from "js-cookie";

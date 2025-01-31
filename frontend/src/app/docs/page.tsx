@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react";
 import {Document} from "@/types/document";
 import Cookies from "js-cookie";
-import {createNewDocument, getAllDocuments} from "@/services/documentService";
+import {getAllDocuments} from "@/services/documentService";
 import {Pageable} from "@/types/pageable";
 import {useRouter} from "next/navigation";
 import {ObjectId} from "bson";
@@ -40,9 +40,12 @@ export default function Page() {
             </button>
             <section className="w-10/12 flex mt-4 justify-center flex-wrap">
                 {documents && documents.length > 0 && documents.map((doc, index) =>
-                    <Link href={`/docs/${doc.id}`} key={index} className="flex flex-col w-52 h-72 p-4 m-4 bg-accent-600">
-                        <div className="text-text-50" dangerouslySetInnerHTML={{__html: mdToHtmlConverter(doc.title)}}></div>
-                        <div className="break-all" dangerouslySetInnerHTML={{__html: mdToHtmlConverter(doc.content)}}></div>
+                    <Link href={`/docs/${doc.id}`} key={index}
+                          className="flex flex-col w-52 h-72 p-4 m-4 bg-accent-600">
+                        <div className="text-text-50"
+                             dangerouslySetInnerHTML={{__html: mdToHtmlConverter(doc.title)}}></div>
+                        <div className="break-all"
+                             dangerouslySetInnerHTML={{__html: mdToHtmlConverter(doc.content)}}></div>
                     </Link>
                 )}
             </section>
