@@ -3,11 +3,9 @@ package com.ozo.backend.services;
 import com.ozo.backend.dtos.DocumentDTO;
 import com.ozo.backend.entitys.Document;
 import com.ozo.backend.mapper.DocumentMapper;
-import com.ozo.backend.repositorys.DocumentRepository;
-import org.springframework.http.ResponseEntity;
+import com.ozo.backend.repositorys.mongodb.DocumentRepository;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class DocumentService {
     }
 
     public List<DocumentDTO> getAllDocuments() {
-        return documentMapper.mapToDTOs((List<Document>) documentRepository.findAll());
+        return documentMapper.mapToDTOs(documentRepository.findAll());
     }
 
     public DocumentDTO updateDocument(DocumentDTO documentDTO) {
@@ -40,11 +38,16 @@ public class DocumentService {
         return documentMapper.mapToDTO(documentRepository.save(document));
     }
 
-    public DocumentDTO getDocumentById(Long documentId) {
+    public DocumentDTO getDocumentById(String documentId) {
         return documentMapper.mapToDTO(documentRepository.findById(documentId).orElseThrow());
     }
 
-    public void deleteDocumentById(Long documentId) {
+    public void deleteDocumentById(String documentId) {
         documentRepository.deleteById(documentId);
+    }
+
+    public List<DocumentDTO> filterDocuments(List<DocumentDTO> documents, String filter) {
+        // TODO make deep search
+        return documents.stream().filter((documentDTO -> documentDTO.getTitle().toLowerCase().contains(filter.toLowerCase()))).toList();
     }
 }

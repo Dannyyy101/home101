@@ -3,13 +3,14 @@
 import {useEffect, useRef, useState} from "react";
 import {mdToHtmlConverter} from "@/utils/mdToHtmlConverter";
 import {Document} from "@/types/document";
-import {updateDocumentById} from "@/services/documentService";
+import {createNewDocument, updateDocumentById} from "@/services/documentService";
 import Cookies from "js-cookie";
 
-export const Texteditor = ({doc}: { doc: Document }) => {
+export const Texteditor = ({doc, newDocument}: { doc: Document, newDocument: boolean }) => {
 
     const [htmlContent, setHtmlContent] = useState<string>("")
     const [mdContent, setMdContent] = useState<string>("")
+    const [title, setTitle] = useState<string>("");
     const [showMd, setShowMd] = useState<boolean>(true)
     const [showToolTipps, setShowToolTipps] = useState<{
         shown: boolean,
@@ -17,15 +18,16 @@ export const Texteditor = ({doc}: { doc: Document }) => {
     }>({shown: false, position: {x: -1, y: -1}})
 
     useEffect(() => {
+        setTitle(doc.title)
         setMdContent(doc.content)
-    }, []);
+    }, [doc]);
 
     const toolTippsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!showMd)
             setHtmlContent(mdToHtmlConverter(mdContent))
-    }, [showMd]);
+    }, [showMd, mdContent]);
 
     const handleTextSelection = (event: MouseEvent | KeyboardEvent) => {
         const selection = window.getSelection();
@@ -42,7 +44,6 @@ export const Texteditor = ({doc}: { doc: Document }) => {
 
             setShowToolTipps({shown: true, position: {x: mouseX, y: mouseY}})
         } else {
-            console.log("dawad")
             setShowToolTipps({shown: false, position: {x: -1, y: -1}})
         }
     };
@@ -68,41 +69,64 @@ export const Texteditor = ({doc}: { doc: Document }) => {
     const handleSaveDocument = async () => {
         const token = Cookies.get("accessToken");
         if (token) {
-            await updateDocumentById(token, String(doc.id), {...doc, content: mdContent})
+            if (newDocument) {
+                await createNewDocument(token, {
+                    ...doc,
+                    content: mdContent,
+                    title: title,
+                    created: new Date(),
+                    updated: new Date()
+                })
+            } else {
+                await updateDocumentById(token, String(doc.id), {...doc, content: mdContent, updated: new Date()})
+            }
         }
     }
 
     return (
         <section className="w-full h-full relative p-8 mt-2">
-            {showToolTipps.shown &&
-                <div ref={toolTippsRef} className="absolute bg-accent-300 px-2 rounded"
-                     style={{top: showToolTipps.position.y - 120, left: showToolTipps.position.x}}>
-                    <button>Deck</button>
-                </div>}
-            {showMd ?
-                <textarea
-                    className="text-text-900 focus:outline-none resize-none w-full h-full bg-primary-100 rounded-xl p-3"
-                    value={mdContent}
-                    onChange={(e) => setMdContent(e.target.value)}>
-                </textarea>
-                :
-                <div
-                    className="text-text-900 focus:outline-none resize-none w-full h-full bg-primary-100 rounded-xl p-3"
-                    dangerouslySetInnerHTML={{__html: htmlContent}}>
+            <section className="w-full h-12 flex justify-end">
+                <div className="w-1/2 flex justify-start items-end">
+                    {showMd ?
+                        <input className="w-64 h-full bg-primary-100 rounded text-text-950 pl-2 mb-2 focus:outline-none"
+                               value={title}
+                               placeholder={"Titel"}
+                               onChange={(e) => setTitle(e.target.value)}/>
+                        : <div className="w-64 rouned text-text-950 pl-2" dangerouslySetInnerHTML={{__html: title}}></div>}
                 </div>
-            }
-            <button onClick={() => handleSaveDocument()}>
-                 <span className="material-icons absolute top-0 right-10 text-black">
+                <div className="w-1/2 h-full flex justify-end items-end">
+                    <button onClick={() => handleSaveDocument()} className="h-6 mb-2">
+                 <span className="material-icons text-black">
                     save
                  </span>
-            </button>
-            <button onClick={() => setShowMd(!showMd)}>
-                <span className="material-icons absolute top-0 right-[70px] text-black">
+                    </button>
+                    <button onClick={() => setShowMd(!showMd)} className="h-6 mb-2">
+                <span className="material-icons text-black">
                     {showMd ? "edit" : "menu_book"}
                 </span>
-            </button>
-
-
+                    </button>
+                </div>
+            </section>
+            <section className="h-full w-full">
+                {showToolTipps.shown &&
+                    <div ref={toolTippsRef} className="absolute bg-accent-300 px-2 rounded"
+                         style={{top: showToolTipps.position.y - 120, left: showToolTipps.position.x}}>
+                        <button>Deck</button>
+                    </div>}
+                {showMd ?
+                    <textarea
+                        placeholder={"Text eingaben"}
+                        className="text-text-900 focus:outline-none resize-none w-full h-full bg-primary-100 rounded-xl p-3"
+                        value={mdContent}
+                        onChange={(e) => setMdContent(e.target.value)}>
+                </textarea>
+                    :
+                    <div
+                        className="text-text-900 focus:outline-none resize-none w-full h-full bg-primary-100 rounded-xl p-3"
+                        dangerouslySetInnerHTML={{__html: htmlContent}}>
+                    </div>
+                }
+            </section>
         </section>
     )
 }

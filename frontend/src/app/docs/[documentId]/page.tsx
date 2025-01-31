@@ -1,6 +1,6 @@
 'use client'
 
-import {useParams} from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {getDocumentById} from "@/services/documentService";
 import Cookies from "js-cookie";
@@ -9,24 +9,28 @@ import {Texteditor} from "@/components/Texteditor";
 
 export default function Page() {
     const [document, setDocument] = useState<Document | null>(null)
+
     const params = useParams<{ documentId: string }>()
+    const searchParams = useSearchParams(); // Verwende useSearchParams
+    const newDoc: boolean = Boolean(searchParams.get('newDoc'));
 
     useEffect(() => {
         const token = Cookies.get("accessToken");
-
         if (token) {
-            console.log(token);
-            console.log(params)
-            getDocumentById(token, params.documentId).then((doc: Document) => {
-                setDocument(doc);
-            })
+            if (newDoc) {
+                setDocument({content: "", title: "", updated: new Date(), created: new Date(), id: params.documentId})
+            } else {
+                getDocumentById(token, params.documentId).then((doc: Document) => {
+                    setDocument(doc);
+                })
+            }
         }
     }, [params]);
 
     return (
-        <main className="w-screen flex flex-col h-[90%]">
+        <main className="w-screen flex items-center flex-col h-[90%]">
             {document &&
-                <Texteditor doc={document}/>
+                <Texteditor doc={document} newDocument={newDoc}/>
             }
         </main>
     )

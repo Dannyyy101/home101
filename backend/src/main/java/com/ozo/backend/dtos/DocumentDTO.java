@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class DocumentDTO {
-    private Long id;
+    private String id;
+    private String title;
     private String content;
     private LocalDateTime created;
     private LocalDateTime updated;

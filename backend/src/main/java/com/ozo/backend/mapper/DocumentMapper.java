@@ -11,11 +11,11 @@ public class DocumentMapper {
 
 
     public DocumentDTO mapToDTO(Document document) {
-        return new DocumentDTO(document.getId(), document.getContent(), document.getCreated(), document.getUpdated());
+        return new DocumentDTO(document.getId(), document.getTitle(), document.getContent(), document.getCreated(), document.getUpdated());
     }
 
     public Document mapFromDTO(DocumentDTO document) {
-        return new Document(document.getId(), document.getContent(), document.getCreated(), document.getUpdated());
+        return new Document(document.getId(), document.getTitle(), document.getContent(), document.getCreated(), document.getUpdated());
     }
 
     public List<DocumentDTO> mapToDTOs(List<Document> documents) {

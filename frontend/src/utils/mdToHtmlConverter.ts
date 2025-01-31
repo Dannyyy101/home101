@@ -2,6 +2,7 @@ export const mdToHtmlConverter = (text: string) => {
     text = replaceHeader(text)
     text = replaceLine(text)
     text = replaceLists(text)
+    text = replaceLink(text)
     return replaceBoldText(text)
 }
 
@@ -14,6 +15,7 @@ const replaceHeader = (text: string) => {
 };
 
 const replaceBoldText = (text: string) => {
+    // TODO get document titles with path to build link
     return text.replace(/\*\*(.*?)\*\*/gm, "<strong>$1</strong>")
 }
 
@@ -26,7 +28,7 @@ const replaceLists = (text: string) => {
             .split(/\n/)
             .map((line) => line.trim())
             .filter((line) => line.startsWith("-"))
-            .map((line) => `<li>${line.slice(2)}</li>`)
+            .map((line) => `<li>・${line.slice(2)}</li>`)
             .join("");
 
         return `<ul>${listItems}</ul>`;
@@ -35,4 +37,8 @@ const replaceLists = (text: string) => {
 
 const replaceLine = (text:string) =>{
    return text.replace(/^---$/gm, "<hr>")
+}
+
+const replaceLink = (text:string) =>{
+    return text.replace(/^\[(.*?)]$/gm, "<Link href=''>$1</Link>")
 }

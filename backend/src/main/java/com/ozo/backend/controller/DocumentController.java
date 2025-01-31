@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/docs")
+@RequestMapping("/api/docs")
 public class DocumentController {
 
     private final DocumentService documentService;
@@ -25,8 +25,11 @@ public class DocumentController {
     }
 
     @GetMapping("")
-    public Page<DocumentDTO> getAllDocuments(Pageable pageable) {
+    public Page<DocumentDTO> getAllDocuments(Pageable pageable, @RequestParam(required = false) String searchQuery) {
         List<DocumentDTO> documents = documentService.getAllDocuments();
+        if (searchQuery != null) {
+            documents = documentService.filterDocuments(documents, searchQuery);
+        }
         return pageService.getPageFromList(documents, pageable);
     }
 
@@ -38,17 +41,18 @@ public class DocumentController {
 
     @GetMapping("/{documentId}")
     public DocumentDTO getDocumentById(@PathVariable String documentId) {
-        return documentService.getDocumentById(Long.valueOf(documentId));
+        return documentService.getDocumentById(documentId);
     }
 
     @PutMapping("/{documentId}")
     public DocumentDTO updateDocument(@PathVariable String documentId, @RequestBody DocumentDTO documentDTO) {
+        documentDTO.setId(documentId);
         return documentService.updateDocument(documentDTO);
     }
 
     @DeleteMapping("/{documentId}")
     public ResponseEntity<Void> deleteDocument(@PathVariable String documentId) {
-        documentService.deleteDocumentById(Long.valueOf(documentId));
+        documentService.deleteDocumentById(documentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
