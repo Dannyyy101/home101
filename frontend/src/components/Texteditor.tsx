@@ -20,7 +20,7 @@ export const Texteditor = ({doc, newDocument}: { doc: Document, newDocument: boo
     useEffect(() => {
         setTitle(doc.title)
         setMdContent(doc.content)
-    }, [doc]);
+    }, []);
 
     const toolTippsRef = useRef<HTMLDivElement>(null);
 
@@ -68,6 +68,7 @@ export const Texteditor = ({doc, newDocument}: { doc: Document, newDocument: boo
 
     const handleSaveDocument = async () => {
         const token = Cookies.get("accessToken");
+
         if (token) {
             if (newDocument) {
                 await createNewDocument(token, {
@@ -78,9 +79,15 @@ export const Texteditor = ({doc, newDocument}: { doc: Document, newDocument: boo
                     updated: new Date()
                 })
             } else {
-                await updateDocumentById(token, String(doc.id), {...doc, content: mdContent, updated: new Date()})
+                await updateDocumentById(token, String(doc.id), {
+                    ...doc,
+                    title: title,
+                    content: mdContent,
+                    updated: new Date()
+                })
             }
         }
+        console.log(title)
     }
 
     return (
@@ -92,7 +99,8 @@ export const Texteditor = ({doc, newDocument}: { doc: Document, newDocument: boo
                                value={title}
                                placeholder={"Titel"}
                                onChange={(e) => setTitle(e.target.value)}/>
-                        : <div className="w-64 rouned text-text-950 pl-2" dangerouslySetInnerHTML={{__html: title}}></div>}
+                        : <div className="w-64 rouned text-text-950 pl-2"
+                               dangerouslySetInnerHTML={{__html: title}}></div>}
                 </div>
                 <div className="w-1/2 h-full flex justify-end items-end">
                     <button onClick={() => handleSaveDocument()} className="h-6 mb-2">

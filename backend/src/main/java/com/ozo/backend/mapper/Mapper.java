@@ -2,13 +2,16 @@ package com.ozo.backend.mapper;
 
 import java.util.List;
 
-public interface Mapper {
+public interface Mapper<S, T> {
+    T mapToDTO(S source);
 
-    <T> T mapToDTO(T obj);
+    S mapFromDTO(T target);
 
-    <T> T mapFromDTO(T obj);
+    default List<T> mapToDTOs(List<S> source) {
+        return source.stream().map((this::mapToDTO)).toList();
+    }
 
-    <T> List<T> mapToDTOs(List<T> objs);
-
-    <T> List<T> mapFromDTOs(List<T> objs);
+    default List<S> mapFromDTOs(List<T> target) {
+        return target.stream().map((this::mapFromDTO)).toList();
+    }
 }

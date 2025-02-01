@@ -33,6 +33,7 @@ public class DocumentService {
 
     public DocumentDTO updateDocument(DocumentDTO documentDTO) {
         Document document = documentRepository.findById(documentDTO.getId()).orElseThrow();
+        document.setTitle(documentDTO.getTitle());
         document.setContent(documentDTO.getContent());
         document.setUpdated(LocalDateTime.now());
         return documentMapper.mapToDTO(documentRepository.save(document));

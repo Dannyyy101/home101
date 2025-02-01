@@ -1,5 +1,6 @@
 package com.ozo.backend.services;
 
+import com.ozo.backend.dtos.DeckDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
