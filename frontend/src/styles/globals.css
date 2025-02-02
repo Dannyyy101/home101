@@ -1,0 +1,188 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --text-50: #eff1f5;
+    --text-100: #dfe2ec;
+    --text-200: #bfc5d9;
+    --text-300: #9fa8c6;
+    --text-400: #808bb3;
+    --text-500: #606e9f;
+    --text-600: #4d5880;
+    --text-700: #394260;
+    --text-800: #262c40;
+    --text-900: #131620;
+    --text-950: #0a0b10;
+
+    --background-50: #eff0f6;
+    --background-100: #dee1ed;
+    --background-200: #bdc4db;
+    --background-300: #9ca6c9;
+    --background-400: #7b88b7;
+    --background-500: #5b6ba4;
+    --background-600: #485584;
+    --background-700: #364063;
+    --background-800: #242b42;
+    --background-900: #121521;
+    --background-950: #090b10;
+
+    --primary-50: #eef0f6;
+    --primary-100: #dde1ee;
+    --primary-200: #bbc4dd;
+    --primary-300: #99a6cc;
+    --primary-400: #7788bb;
+    --primary-500: #556aaa;
+    --primary-600: #445588;
+    --primary-700: #334066;
+    --primary-800: #222b44;
+    --primary-900: #111522;
+    --primary-950: #090b11;
+
+    --secondary-50: #eef0f7;
+    --secondary-100: #dce1ef;
+    --secondary-200: #bac3de;
+    --secondary-300: #97a5ce;
+    --secondary-400: #7487be;
+    --secondary-500: #5269ad;
+    --secondary-600: #41548b;
+    --secondary-700: #313f68;
+    --secondary-800: #212a45;
+    --secondary-900: #101523;
+    --secondary-950: #080a11;
+
+    --accent-50: #edf0f7;
+    --accent-100: #dbe0f0;
+    --accent-200: #b8c1e0;
+    --accent-300: #94a2d1;
+    --accent-400: #7083c2;
+    --accent-500: #4d64b3;
+    --accent-600: #3d508f;
+    --accent-700: #2e3c6b;
+    --accent-800: #1f2847;
+    --accent-900: #0f1424;
+    --accent-950: #080a12;
+  }
+
+  .dark {
+    --text-50: #0a0b10;
+    --text-100: #131620;
+    --text-200: #262c40;
+    --text-300: #394260;
+    --text-400: #4d5880;
+    --text-500: #606e9f;
+    --text-600: #808bb3;
+    --text-700: #9fa8c6;
+    --text-800: #bfc5d9;
+    --text-900: #dfe2ec;
+    --text-950: #eff1f5;
+
+    --background-50: #090b11;
+    --background-100: #121521;
+    --background-200: #232a43;
+    --background-300: #353f64;
+    --background-400: #465486;
+    --background-500: #5869a7;
+    --background-600: #7987b9;
+    --background-700: #9ba5ca;
+    --background-800: #bcc3dc;
+    --background-900: #dee1ed;
+    --background-950: #eef0f6;
+
+    --primary-50: #090b11;
+    --primary-100: #111522;
+    --primary-200: #222a44;
+    --primary-300: #333f66;
+    --primary-400: #445488;
+    --primary-500: #5569aa;
+    --primary-600: #7787bb;
+    --primary-700: #99a5cc;
+    --primary-800: #bbc3dd;
+    --primary-900: #dde1ee;
+    --primary-950: #eef0f6;
+
+    --secondary-50: #080a11;
+    --secondary-100: #101523;
+    --secondary-200: #212945;
+    --secondary-300: #313e68;
+    --secondary-400: #41528b;
+    --secondary-500: #5267ad;
+    --secondary-600: #7485be;
+    --secondary-700: #97a4ce;
+    --secondary-800: #bac2de;
+    --secondary-900: #dce1ef;
+    --secondary-950: #eef0f7;
+
+    --accent-50: #080a12;
+    --accent-100: #0f1424;
+    --accent-200: #1f2847;
+    --accent-300: #2e3c6b;
+    --accent-400: #3d508f;
+    --accent-500: #4d64b3;
+    --accent-600: #7083c2;
+    --accent-700: #94a2d1;
+    --accent-800: #b8c1e0;
+    --accent-900: #dbe0f0;
+    --accent-950: #edf0f7;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--text-50);
+  background: var(--background-50);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1{
+  font-size: xxx-large;
+  font-weight: bolder;
+}
+
+h2{
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+h3{
+  font-size: x-large;
+  font-weight: bolder;
+}
+
+h4{
+  font-size: larger;
+  font-weight: bolder;
+}
+
+h5{
+  font-size: large;
+  font-weight: bolder;
+}
+
+h6{
+  font-size: medium;
+  font-weight: bolder;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.transition-transform {
+  transition: transform 0.5s;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}

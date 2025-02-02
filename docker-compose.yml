@@ -1,0 +1,68 @@
+
+services:
+  backend:
+    build: backend
+    networks:
+      - net
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - net
+      -
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.0
+    environment:
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
+      - KC_DB_USERNAME=admin
+      - KC_DB_PASSWORD=admin
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command:
+      - start-dev
+      - --proxy-headers=xforwarded
+      - --hostname-strict=false
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8080"
+      - "8443:8443"
+    networks:
+      - net
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./scripts/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - net
+
+
+  frontend:
+    build: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - net
+      -
+volumes:
+  mongodb_data:
+  db_data:
+networks:
+  net:
