@@ -19,7 +19,7 @@ export const GlobalSearchField = () => {
                 const differenceInMilliseconds = currentTime - lastPressedKey.time;
                 const differenceInSeconds = differenceInMilliseconds / 1000;
 
-                if (lastPressedKey.shift && differenceInSeconds <= 1) {
+                if (lastPressedKey.shift && differenceInSeconds <= 0.3) {
                     setInputVisible((prev) => !prev); // Toggle visibility
                     setLastPressedKey({ shift: false, time: currentTime });
                 } else {
