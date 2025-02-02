@@ -45,7 +45,7 @@ export default function Page() {
                         {documents && documents.length > 0 && documents.map((doc, index) =>
                             <Link href={`/docs/${doc.id}`} key={index}
                                   className="flex flex-col w-52 h-72 p-4 m-4 bg-accent-600">
-                                <div className="text-text-50"
+                                <div className="text-text-50 text-xl"
                                      dangerouslySetInnerHTML={{__html: mdToHtmlConverter(doc.title || "")}}></div>
                                 <div className="break-all"
                                      dangerouslySetInnerHTML={{__html: mdToHtmlConverter(doc.content || "")}}></div>

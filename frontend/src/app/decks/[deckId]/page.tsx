@@ -10,12 +10,13 @@ import {Card} from "@/types/card";
 import {ObjectId} from "bson";
 import {createNewCard, updateCard} from "@/services/cardService";
 import {getMinutesBetweenToTimes, getTimeView} from "@/utils/time";
+import {EditCardView} from "@/components/cards/EditCard";
 
 export default function Page() {
-    // const [edit, setEdit] = useState<boolean>(false)
     const [deck, setDeck] = useState<Deck | null>(null)
     const [learnModi, setLearnModi] = useState<boolean>(false)
     const [showAddCard, setShowAddCard] = useState<boolean>(false);
+    const [edit, setEdit] = useState<boolean>(false)
     const [newCard, setNewCard] = useState<Card>({question: "", answer: "", performance: "", lastLearned: new Date()})
     const params = useParams<{ deckId: string }>()
     const addCardRef = useRef<HTMLInputElement>(null);
@@ -45,18 +46,6 @@ export default function Page() {
         };
     }, [showAddCard]);
 
-    const handleSaveNewCard = async () => {
-        const token = Cookies.get("accessToken");
-        if (token && deck) {
-            const id = new ObjectId()
-            console.log(id.toString())
-            await createNewCard(token, {...newCard, id: id.toString()})
-            await addCardsToDeck(token, deck.id, [{...newCard, id: id.toString()}])
-            setDeck({...deck, cards: [...deck.cards, {...newCard, id: id.toString()}]})
-            setShowAddCard(false)
-        }
-    }
-
 
     const handleUpdateCard = async (card: Card) => {
         const token = Cookies.get("accessToken");
@@ -71,9 +60,21 @@ export default function Page() {
                 setDeck(updatedDeck);
 
                 await updateCard(token, card.id || "", card)
+                setShowAddCard(false)
             }
         }
     };
+
+    const handleSaveNewCard = async (card:Card) => {
+        const token = Cookies.get("accessToken");
+        if (token && deck) {
+            const id = new ObjectId()
+            await createNewCard(token, {...card, id: id.toString()})
+            await addCardsToDeck(token, deck.id, [{...card, id: id.toString()}])
+            setDeck({...deck, cards: [...deck.cards, {...card, id: id.toString()}]})
+            setShowAddCard(false)
+        }
+    }
 
     return (
         <>
@@ -109,10 +110,16 @@ edit
                                         <td className="px-4 py-2 text-gray-900">
                                             {getTimeView(getMinutesBetweenToTimes(new Date(card.lastLearned), new Date()))}
                                         </td>
-                                        <td className="px-4 py-2 text-gray-900 w-8"><span
-                                            className="material-icons text-black">
+                                        <td className="px-4 py-2 text-gray-900 w-8">
+                                            <button onClick={() => {
+                                                setShowAddCard(true)
+                                                setNewCard(card)
+                                                setEdit(true)
+                                            }}><span
+                                                className="material-icons text-black">
 edit
-</span></td>
+                                        </span></button>
+                                        </td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -133,30 +140,15 @@ edit
                         </button>
 
                         {/* Add Card Modal */}
-                        {showAddCard && (
-                            <div
-                                ref={addCardRef}
-                                className="p-4 h-96 rounded bg-accent-600 z-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/3 flex flex-col"
-                            >
-                                <label>Frage</label>
-                                <textarea
-                                    value={newCard.question}
-                                    onChange={e => setNewCard({...newCard, question: e.target.value})}
-                                    className="pl-1 h-40 border-text-50 border bg-transparent resize-none focus:outline-none"></textarea>
-                                <label className="mt-2">Antwort</label>
-                                <textarea
-                                    onChange={e => setNewCard({...newCard, answer: e.target.value})}
-                                    value={newCard.answer}
-                                    className="pl-1 h-40 border-text-50 border bg-transparent resize-none focus:outline-none"></textarea>
-                                <button onClick={handleSaveNewCard}
-                                        className="w-32 h-12 mt-6 text-text-900 bg-accent-100 rounded-lg">
-                                    Erstellen
-                                </button>
-                            </div>
+                        {showAddCard && (edit ?
+                            <EditCardView ref={addCardRef} card={newCard} saveCard={handleUpdateCard}/> :
+                            <EditCardView ref={addCardRef} card={newCard} saveCard={handleSaveNewCard}/>
                         )}
                     </div>
                 ))}
         </>
     );
 }
+
+
 
