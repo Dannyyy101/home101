@@ -39,4 +39,9 @@ public class CardController {
     public CardDTO getCardById(@PathVariable String cardId) {
         return cardService.getCardById(cardId);
     }
+
+    @PutMapping("/{cardId}")
+    public CardDTO getCardById(@PathVariable String cardId, @RequestBody CardDTO card) {
+        return cardService.updateCardById(cardId, card);
+    }
 }

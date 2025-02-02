@@ -12,11 +12,11 @@ import java.util.List;
 public class CardMapper {
 
     public CardDTO mapToDTO(Card card) {
-        return new CardDTO(card.getId(), card.getQuestion(), card.getAnswer());
+        return new CardDTO(card.getId(), card.getQuestion(), card.getAnswer(), card.getPerformance(), card.getLastLearned());
     }
 
     public Card mapFromDTO(CardDTO card) {
-        return new Card(card.getId(), card.getQuestion(), card.getAnswer());
+        return new Card(card.getId(), card.getQuestion(), card.getAnswer(), card.getPerformance(), card.getLastLearned());
     }
 
     public List<CardDTO> mapToDTOs(List<Card> cards) {

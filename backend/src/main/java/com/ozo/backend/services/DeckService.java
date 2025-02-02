@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class DeckService {
@@ -39,7 +40,7 @@ public class DeckService {
 
     public void addCardsToDeck(String deckId, List<CardDTO> cards) {
         Deck deck = deckRepository.findById(deckId).orElseThrow();
-        deck.setCards(new HashSet<>(cardMapper.mapFromToDTOs(cards)));
+        deck.setCards(Stream.concat(cardMapper.mapFromToDTOs(cards.stream().toList()).stream(), deck.getCards().stream()).collect(Collectors.toSet()));
         deckRepository.save(deck);
     }
 }

@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -16,4 +18,6 @@ public class Card {
     String id;
     String question;
     String answer;
+    String performance;
+    LocalDateTime lastLearned;
 }
