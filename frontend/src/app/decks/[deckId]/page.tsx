@@ -65,12 +65,11 @@ export default function Page() {
 
             if (index !== -1) {
                 const updatedCards = [...deck.cards];
-
                 updatedCards[index] = card;
-
                 const updatedDeck = {...deck, cards: updatedCards};
+
                 setDeck(updatedDeck);
-                console.log(card)
+
                 await updateCard(token, card.id || "", card)
             }
         }

@@ -23,7 +23,10 @@ export const getDeckById = async (token: string, deckId: string) => {
             'Authorization': `Bearer ${token}`
         }
     });
-    return await res.json() as Deck;
+    const deck = await res.json() as Deck;
+    console.log(deck)
+    const cards:Card[] = deck.cards.map((card) => ({...card, lastLearned: convertUTCDateToLocalDate(new Date(card.lastLearned))}))
+    return {...deck, cards:cards};
 }
 
 export const addCardsToDeck = async (token: string, deckId: string, cards: Card[]) => {
@@ -35,4 +38,15 @@ export const addCardsToDeck = async (token: string, deckId: string, cards: Card[
             'Content-Type': 'application/json'
         }, body: JSON.stringify(cards)
     });
+}
+
+function convertUTCDateToLocalDate(date:Date) {
+    var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate;
 }

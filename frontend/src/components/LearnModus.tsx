@@ -68,9 +68,10 @@ export const LearnModus: React.FC<LearnModusProps> = ({cards, stopLearnModi, upd
                         {ratings.map((emoji, index) => <button key={index}
                                                                onClick={() => updateCard({
                                                                    ...cards[selectedCardIndex],
-                                                                   performance: emoji
+                                                                   performance: emoji,
+                                                                   lastLearned: new Date()
                                                                })}
-                                                               className={`w-10 h-10 rounded-full ${cards[selectedCardIndex].performance == emoji ? "bg-primary-200": "bg-primary-400"}  border m-2`}>{emoji}</button>)}
+                                                               className={`w-10 h-10 rounded-full ${cards[selectedCardIndex].performance == emoji ? "bg-primary-200" : "bg-primary-400"}  border m-2`}>{emoji}</button>)}
                     </div>
                 </section>
                 <button className="absolute left-8 top-1/2" onClick={handlePreviousCard}>
