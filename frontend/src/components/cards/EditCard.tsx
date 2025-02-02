@@ -42,4 +42,6 @@ export const EditCardView = forwardRef<HTMLDivElement, CardViewProps>(
             </div>
         );
     }
-);
+)
+EditCardView.displayName = "EditCardView"
+
